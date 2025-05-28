@@ -99,6 +99,7 @@ class _CupertinoRotationSliderState extends State<CupertinoRotationSlider> {
                       child: CustomPaint(
                         painter: _CupertinoSliderPainter(
                           primaryColor: CupertinoTheme.of(context).primaryColor,
+                          contrastingColor: CupertinoTheme.of(context).primaryContrastingColor,
                           value: value,
                           isDragging: _dragStartDetails != null,
                         ),
@@ -120,26 +121,28 @@ class _CupertinoSliderPainter extends CustomPainter {
     required this.primaryColor,
     required this.value,
     this.isDragging = false,
+    this.contrastingColor = CupertinoColors.white,
   });
 
   final Color primaryColor;
   final double value;
   final bool isDragging;
+  final Color contrastingColor;
 
   @override
   void paint(Canvas canvas, Size size) {
     final dividerPaint = Paint()
-      ..color = CupertinoColors.white.withOpacity(0.75)
+      ..color = contrastingColor.withOpacity(0.75)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.0;
 
     final highlightedDividerPaint = Paint()
-      ..color = CupertinoColors.white
+      ..color = contrastingColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
     final outOfBoundsDividerPaint = Paint()
-      ..color = CupertinoColors.white.withOpacity(0.25)
+      ..color = contrastingColor.withOpacity(0.25)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.0;
 
@@ -175,11 +178,11 @@ class _CupertinoSliderPainter extends CustomPainter {
     canvas.drawCircle(
       Offset(center.dx, -8.0),
       3.0,
-      Paint()..color = CupertinoColors.white,
+      Paint()..color = contrastingColor,
     );
 
     final tickerPaint = Paint()
-      ..color = isDragging ? primaryColor : CupertinoColors.white
+      ..color = isDragging ? primaryColor : contrastingColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 
@@ -193,6 +196,7 @@ class _CupertinoSliderPainter extends CustomPainter {
   @override
   bool shouldRepaint(_CupertinoSliderPainter oldDelegate) =>
       primaryColor != oldDelegate.primaryColor ||
+      contrastingColor != oldDelegate.contrastingColor ||
       value != oldDelegate.value ||
       isDragging != oldDelegate.isDragging;
 }

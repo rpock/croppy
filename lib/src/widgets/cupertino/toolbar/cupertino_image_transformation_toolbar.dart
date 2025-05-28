@@ -107,8 +107,8 @@ class _CupertinoImageTransformationToolbarState
           isActive: _activeKnob == _Knob.rotateZ,
           onSelected: () => setState(() => _activeKnob = _Knob.rotateZ),
           onChanged: (v) => widget.controller.onStraighten(angleRad: v),
-          inactiveChild: const CupertinoStraightenIcon(
-            color: CupertinoColors.white,
+          inactiveChild: CupertinoStraightenIcon(
+            color: CupertinoTheme.of(context).primaryContrastingColor,
           ),
         ),
       if (widget.controller.isTransformationEnabled(Transformation.rotateX))
@@ -120,8 +120,8 @@ class _CupertinoImageTransformationToolbarState
           isActive: _activeKnob == _Knob.rotateX,
           onSelected: () => setState(() => _activeKnob = _Knob.rotateX),
           onChanged: (v) => widget.controller.onRotateX(angleRad: v),
-          inactiveChild: const CupertinoPerspectiveXIcon(
-            color: CupertinoColors.white,
+          inactiveChild: CupertinoPerspectiveXIcon(
+            color: CupertinoTheme.of(context).primaryContrastingColor,
           ),
         ),
       if (widget.controller.isTransformationEnabled(Transformation.rotateY))
@@ -132,8 +132,8 @@ class _CupertinoImageTransformationToolbarState
           isActive: _activeKnob == _Knob.rotateY,
           onSelected: () => setState(() => _activeKnob = _Knob.rotateY),
           onChanged: (v) => widget.controller.onRotateY(angleRad: v),
-          inactiveChild: const CupertinoPerspectiveYIcon(
-            color: CupertinoColors.white,
+          inactiveChild: CupertinoPerspectiveYIcon(
+            color: CupertinoTheme.of(context).primaryContrastingColor,
           ),
         ),
     ];

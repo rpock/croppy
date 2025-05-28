@@ -21,12 +21,20 @@ class CupertinoImageCropHandles extends StatelessWidget {
   final Color fineGuideColor;
 
   Widget _buildHandles(BuildContext context, bool areGuideLinesVisible) {
+    // Theme-Farben verwenden, wenn im Konstruktor keine Farben angegeben wurden
+    final primaryColor = CupertinoTheme.of(context).primaryColor;
+    final primaryContrastingColor = CupertinoTheme.of(context).primaryContrastingColor;
+    
+    final actualHandleColor = handleColor == CupertinoColors.white ? primaryColor : handleColor;
+    final actualGuideColor = guideColor == CupertinoColors.white ? primaryContrastingColor : guideColor;
+    final actualFineGuideColor = fineGuideColor == const Color.fromRGBO(255, 255, 255, 0.3) ? 
+        primaryContrastingColor.withOpacity(0.3) : fineGuideColor;
     final fineGuidesChild = AnimatedOpacity(
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeInOut,
       opacity: controller.isRotating && areGuideLinesVisible ? 1.0 : 0.0,
       child: CustomPaint(
-        painter: _CupertinoImageCropperFineGuidesPainter(color: fineGuideColor),
+        painter: _CupertinoImageCropperFineGuidesPainter(color: actualFineGuideColor),
       ),
     );
 
@@ -35,7 +43,7 @@ class CupertinoImageCropHandles extends StatelessWidget {
       curve: Curves.easeInOut,
       opacity: areGuideLinesVisible ? 1.0 : 0.0,
       child: CustomPaint(
-        painter: _CupertinoImageCropperGuidesPainter(guideColor),
+        painter: _CupertinoImageCropperGuidesPainter(actualGuideColor),
       ),
     );
 
@@ -47,7 +55,7 @@ class CupertinoImageCropHandles extends StatelessWidget {
         CustomPaint(
           painter: showGestureHandlesOn.contains(cropShape.type)
               ? _CupertinoImageRectCropHandlesPainter(
-                  handleColor,
+                  actualHandleColor,
                 )
               : _CupertinoImageCustomCropHandlesPainter(
                   cropShape: cropShape,
