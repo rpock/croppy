@@ -25,11 +25,20 @@ class CupertinoKnobButton extends StatelessWidget {
     // Verwende Theme-Farben für die Buttons, mit Fallback auf Standard-Farben
     final theme = CupertinoTheme.of(context);
     final activeColor = theme.primaryColor;
-    final inactiveColor = theme.textTheme.textStyle.color ?? CupertinoColors.systemGrey2;
+    final inactiveColor = theme.primaryContrastingColor; // Kontrastfarbe für negative/neutrale Werte
     
-    final color = isPositive
-        ? activeColor
-        : inactiveColor;
+    // Unterscheide drei Zustände: positiv, neutral und negativ
+    final Color color;
+    if (isPositive) {
+      // Positiver Wert: Primärfarbe
+      color = activeColor;
+    } else if (!isActive) {
+      // Neutraler Wert (nicht aktiv): Kontrastfarbe
+      color = inactiveColor;
+    } else {
+      // Negativer Wert: Weiß (Cupertino-spezifisch)
+      color = CupertinoColors.white;
+    }
 
     return CupertinoButton(
       onPressed: onPressed,
@@ -47,7 +56,8 @@ class CupertinoKnobButton extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.transparent, // Transparenter Hintergrund statt semi-transparentem barBackgroundColor
+              // Leicht transparenter Hintergrund mit der barBackgroundColor als Basis
+              color: theme.barBackgroundColor.withOpacity(0.2),
               border: Border.all(
                 width: 2.0,
                 color: color.withOpacity(0.35),
