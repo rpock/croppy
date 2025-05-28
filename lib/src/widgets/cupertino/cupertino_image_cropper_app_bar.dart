@@ -24,7 +24,7 @@ class CupertinoImageCropperAppBar extends StatelessWidget
               vertical: 10.0,
             ),
             child: CupertinoFlipHorizontalIcon(
-              color: CupertinoTheme.of(context).primaryColor,
+              color: CupertinoTheme.of(context).textTheme.textStyle.color ?? CupertinoColors.systemGrey2,
               size: 24.0,
             ),
           ),
@@ -38,7 +38,7 @@ class CupertinoImageCropperAppBar extends StatelessWidget
             ),
             child: Icon(
               CupertinoIcons.rotate_left_fill,
-              color: CupertinoTheme.of(context).primaryColor,
+              color: CupertinoTheme.of(context).textTheme.textStyle.color ?? CupertinoColors.systemGrey2,
             ),
           ),
         const Spacer(),

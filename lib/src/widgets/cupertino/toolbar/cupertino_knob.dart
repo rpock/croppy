@@ -22,9 +22,14 @@ class CupertinoKnobButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Verwende Theme-Farben für die Buttons, mit Fallback auf Standard-Farben
+    final theme = CupertinoTheme.of(context);
+    final activeColor = theme.primaryColor;
+    final inactiveColor = theme.textTheme.textStyle.color ?? CupertinoColors.systemGrey2;
+    
     final color = isPositive
-        ? CupertinoTheme.of(context).primaryColor
-        : CupertinoColors.white;
+        ? activeColor
+        : inactiveColor;
 
     return CupertinoButton(
       onPressed: onPressed,
@@ -42,7 +47,7 @@ class CupertinoKnobButton extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.black54,
+              color: CupertinoTheme.of(context).barBackgroundColor.withOpacity(0.6),
               border: Border.all(
                 width: 2.0,
                 color: color.withOpacity(0.35),

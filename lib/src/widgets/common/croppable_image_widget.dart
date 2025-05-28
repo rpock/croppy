@@ -232,8 +232,10 @@ class CroppableImageRenderObject extends RenderBox
               // Avoids some anti-aliasing artifacts
               (offset & imageData.imageSize).inflate(0.5),
               Paint()
-                ..color = Colors.black.withOpacity(backgroundOpacity)
-                ..blendMode = BlendMode.multiply,
+                // Verwende die Hintergrundfarbe aus dem Theme, um einen harmonischeren Overlay zu erzeugen
+                // Der Overlay ist eine abgedunkelte Version der barBackgroundColor, damit UI-Elemente immer lesbar sind
+                ..color = const Color(0xFF000000).withOpacity(backgroundOpacity * 0.8)
+                ..blendMode = BlendMode.srcOver,
             );
           },
           oldLayer: _backgroundTransformLayer.layer,

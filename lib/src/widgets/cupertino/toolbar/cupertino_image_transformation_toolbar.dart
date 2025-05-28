@@ -57,6 +57,9 @@ class _CupertinoImageTransformationToolbarState
           onChanged: (v) {
             widget.controller.onStraighten(angleRad: v);
           },
+          // Verwende spezifische Slider-Farben oder fallback auf Theme-Farben
+          activeColor: CupertinoTheme.of(context).primaryColor,
+          inactiveColor: CupertinoTheme.of(context).textTheme.textStyle.color ?? CupertinoColors.systemGrey2,
         ),
       );
     }
@@ -74,6 +77,9 @@ class _CupertinoImageTransformationToolbarState
           onChanged: (v) {
             widget.controller.onRotateX(angleRad: v);
           },
+          // Verwende spezifische Slider-Farben oder fallback auf Theme-Farben
+          activeColor: CupertinoTheme.of(context).primaryColor,
+          inactiveColor: CupertinoTheme.of(context).textTheme.textStyle.color ?? CupertinoColors.systemGrey2,
         ),
       );
     }
@@ -90,6 +96,9 @@ class _CupertinoImageTransformationToolbarState
           onChanged: (v) {
             widget.controller.onRotateY(angleRad: v);
           },
+          // Verwende spezifische Slider-Farben oder fallback auf Theme-Farben
+          activeColor: CupertinoTheme.of(context).primaryColor,
+          inactiveColor: CupertinoTheme.of(context).textTheme.textStyle.color ?? CupertinoColors.systemGrey2,
         ),
       );
     }

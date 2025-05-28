@@ -13,6 +13,8 @@ class CupertinoRotationSlider extends StatefulWidget {
     required this.onStart,
     required this.onEnd,
     this.isReversed = false,
+    this.activeColor,
+    this.inactiveColor,
   });
 
   final double value;
@@ -21,6 +23,8 @@ class CupertinoRotationSlider extends StatefulWidget {
   final ValueChanged<double> onChanged;
   final VoidCallback onEnd;
   final bool isReversed;
+  final Color? activeColor;
+  final Color? inactiveColor;
 
   @override
   State<CupertinoRotationSlider> createState() =>
@@ -98,8 +102,8 @@ class _CupertinoRotationSliderState extends State<CupertinoRotationSlider> {
                       opacity: value.abs() > epsilon ? 1.0 : 0.5,
                       child: CustomPaint(
                         painter: _CupertinoSliderPainter(
-                          primaryColor: CupertinoTheme.of(context).primaryColor,
-                          contrastingColor: CupertinoTheme.of(context).primaryContrastingColor,
+                          primaryColor: widget.activeColor ?? CupertinoTheme.of(context).primaryColor,
+                          contrastingColor: widget.inactiveColor ?? CupertinoTheme.of(context).primaryContrastingColor,
                           value: value,
                           isDragging: _dragStartDetails != null,
                         ),
