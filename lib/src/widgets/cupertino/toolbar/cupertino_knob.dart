@@ -47,7 +47,7 @@ class CupertinoKnobButton extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: CupertinoTheme.of(context).barBackgroundColor.withOpacity(0.6),
+              color: Colors.transparent, // Transparenter Hintergrund statt semi-transparentem barBackgroundColor
               border: Border.all(
                 width: 2.0,
                 color: color.withOpacity(0.35),
@@ -82,7 +82,7 @@ class CupertinoKnob extends StatelessWidget {
 
     final color = isPositive
         ? CupertinoTheme.of(context).primaryColor
-        : CupertinoColors.white;
+        : CupertinoTheme.of(context).primaryContrastingColor;
 
     late final Widget child;
 
@@ -108,6 +108,7 @@ class CupertinoKnob extends StatelessWidget {
       onPressed: () => onChanged(0.0),
       progressPainter: _CupertinoKnobProgressPainter(
         primaryColor: color,
+        inactiveColor: CupertinoTheme.of(context).primaryContrastingColor,
         value: value / extent,
       ),
       child: AnimatedSwitcher(
@@ -124,15 +125,17 @@ class _CupertinoKnobProgressPainter extends CustomPainter {
   _CupertinoKnobProgressPainter({
     required this.value,
     required this.primaryColor,
+    this.inactiveColor,
   });
 
   final Color primaryColor;
+  final Color? inactiveColor;
   final double value;
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = value > epsilon ? primaryColor : Colors.white
+      ..color = value > epsilon ? primaryColor : (inactiveColor ?? Colors.white)
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
 
