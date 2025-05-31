@@ -115,7 +115,24 @@ class _DefaultCupertinoCroppableImageControllerState
     );
 
     if (mounted) {
+      // This first setState call is important to initially build the UI
+      // with the newly created _controller.
       setState(() {});
+    }
+
+    // If initialData was provided (i.e., loading an existing crop),
+    // schedule a setState after the first frame.
+    // This is a workaround for potential timing issues where the overlayColor
+    // from the theme might not be immediately available or propagated for the very first paint.
+    // By calling setState after the frame, we ensure a rebuild, by which time
+    // didUpdateWidget should have had a chance to update the controller's data
+    // if the theme-derived widget.overlayColor changed.
+    if (widget.initialData != null && mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) { // Re-check if mounted when the callback executes
+          setState(() {});
+        }
+      });
     }
   }
 
