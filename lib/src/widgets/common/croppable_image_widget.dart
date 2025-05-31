@@ -38,6 +38,7 @@ class CroppableImageWidget
       overlayOpacity,
       backgroundOpacity,
       staticCropRect,
+      CupertinoTheme.of(context).scaffoldBackgroundColor.withOpacity(0.98),
     );
   }
 
@@ -54,6 +55,7 @@ class CroppableImageWidget
     renderObject.staticCropRect = (controller is ResizeStaticLayoutMixin)
         ? (controller as ResizeStaticLayoutMixin).staticCropRect
         : null;
+    renderObject.currentThemeOverlayColor = CupertinoTheme.of(context).scaffoldBackgroundColor.withOpacity(0.98);
   }
 
   @override
@@ -84,12 +86,17 @@ class CroppableImageRenderObject extends RenderBox
     double overlaysOpacity,
     double backgroundOpacity, [
     Rect? staticCropRect,
+    Color? currentThemeOverlayColor, // Added
   ])  : _imageData = imageData,
         _viewportScale = viewportScale,
         _gesturePadding = gestureSafeArea,
         _staticCropRect = staticCropRect,
         _backgroundOpacity = backgroundOpacity,
-        _overlayOpacity = overlaysOpacity;
+        _overlayOpacity = overlaysOpacity,
+        _currentThemeOverlayColor = currentThemeOverlayColor // Added
+  {
+    _overlayAlpha = (_overlayOpacity * 255).round();
+  }
 
   CroppableImageData _imageData;
   CroppableImageData get imageData => _imageData;
@@ -129,11 +136,21 @@ class CroppableImageRenderObject extends RenderBox
     markNeedsLayout();
   }
 
+  Color? _currentThemeOverlayColor;
+  Color? get currentThemeOverlayColor => _currentThemeOverlayColor;
+  set currentThemeOverlayColor(Color? value) {
+    if (_currentThemeOverlayColor == value) return;
+    _currentThemeOverlayColor = value;
+    markNeedsPaint();
+  }
+
   double _overlayOpacity;
+  late int _overlayAlpha; // Correct declaration
   double get overlayOpacity => _overlayOpacity;
   set overlayOpacity(double value) {
     if (value == _overlayOpacity) return;
     _overlayOpacity = value;
+    _overlayAlpha = (_overlayOpacity * 255).round(); // Ensure _overlayAlpha is updated here
     markNeedsPaint();
   }
 
@@ -144,8 +161,6 @@ class CroppableImageRenderObject extends RenderBox
     _backgroundOpacity = value;
     markNeedsPaint();
   }
-
-  int get _overlayAlpha => (overlayOpacity * 255).round();
 
   RenderBox? get image => childForSlot(EditableImageSlot.image);
   RenderBox? get handles => childForSlot(EditableImageSlot.handles);
@@ -233,10 +248,10 @@ class CroppableImageRenderObject extends RenderBox
               // Avoids some anti-aliasing artifacts
               (offset & imageData.imageSize).inflate(0.5),
               Paint()
-                ..color =
-                    imageData.overlayColor?.withOpacity(backgroundOpacity) ??
-                        const Color(0xFF000000)
-                            .withOpacity(backgroundOpacity * 0.98)
+                ..color = (_currentThemeOverlayColor ??
+                        imageData.overlayColor ??
+                        const Color(0xFF000000))
+                    .withOpacity(backgroundOpacity)
                 ..blendMode = BlendMode.srcOver,
             );
           },

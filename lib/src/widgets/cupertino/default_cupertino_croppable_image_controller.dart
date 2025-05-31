@@ -47,6 +47,41 @@ class _DefaultCupertinoCroppableImageControllerState
     _prepareController();
   }
 
+  @override
+  void didUpdateWidget(DefaultCupertinoCroppableImageController oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Commenting out needsControllerRebuild as it's not used for now.
+    // bool needsControllerRebuild = false;
+
+    if (widget.imageProvider != oldWidget.imageProvider ||
+        widget.cropShapeFn != oldWidget.cropShapeFn) {
+      // If fundamental properties change, we might need to re-initialize the controller fully.
+      // This might involve disposing the old controller and calling _prepareController again.
+      // For now, we assume these don't change while the cropper is active, or a full rebuild is handled elsewhere.
+    }
+
+    if (_controller != null && widget.overlayColor != oldWidget.overlayColor) {
+      // Update the overlayColor in the controller's data.
+      // The controller (ChangeNotifier) should notify its listeners when 'data' is set.
+      _controller!.data = _controller!.data.copyWith(
+        overlayColor: widget.overlayColor,
+      );
+    }
+    
+    // The following properties are final in CupertinoCroppableImageController and cannot be updated this way.
+    // If they need to be dynamic, the controller's design would need to change.
+    // For now, commenting out to fix lint errors and focus on overlayColor.
+    // if (_controller != null) {
+    //   if (widget.allowedAspectRatios != oldWidget.allowedAspectRatios) {
+    //     // _controller!.allowedAspectRatios = widget.allowedAspectRatios; // This is final
+    //   }
+    //   if (widget.enabledTransformations != oldWidget.enabledTransformations) {
+    //     // _controller!.enabledTransformations = widget.enabledTransformations ?? Transformation.values; // This is final
+    //   }
+    // }
+  }
+
   Future<void> _prepareController() async {
     late final CroppableImageData initialData;
 
@@ -80,7 +115,24 @@ class _DefaultCupertinoCroppableImageControllerState
     );
 
     if (mounted) {
+      // This first setState call is important to initially build the UI
+      // with the newly created _controller.
       setState(() {});
+    }
+
+    // If initialData was provided (i.e., loading an existing crop),
+    // schedule a setState after the first frame.
+    // This is a workaround for potential timing issues where the overlayColor
+    // from the theme might not be immediately available or propagated for the very first paint.
+    // By calling setState after the frame, we ensure a rebuild, by which time
+    // didUpdateWidget should have had a chance to update the controller's data
+    // if the theme-derived widget.overlayColor changed.
+    if (widget.initialData != null && mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) { // Re-check if mounted when the callback executes
+          setState(() {});
+        }
+      });
     }
   }
 
