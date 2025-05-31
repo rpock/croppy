@@ -62,15 +62,18 @@ Future<CropImageResult?> showCupertinoImageCropper(
 
   // Verwende eine Overlay-Farbe basierend auf dem Theme, wenn verfügbar
   // 98% Opazität für stärkere Abdunkelung
-  final overlayColor = themeData?.scaffoldBackgroundColor.withOpacity(0.98);
+  // This is the theme-based overlay color we want to use.
+  final Color? pageLevelOverlayColor = themeData?.scaffoldBackgroundColor.withOpacity(0.98);
 
   if (initialData != null) {
-    _initialData = initialData;
+    // When reopening, update the initialData's overlayColor with the current theme's color.
+    _initialData = initialData.copyWith(overlayColor: pageLevelOverlayColor);
   } else {
+    // For new images, create initialData with the current theme's overlay color.
     _initialData = await CroppableImageData.fromImageProvider(
       imageProvider,
       cropPathFn: cropPathFn ?? aabbCropShapeFn,
-      overlayColor: overlayColor,
+      overlayColor: pageLevelOverlayColor,
     );
   }
 
@@ -84,7 +87,7 @@ Future<CropImageResult?> showCupertinoImageCropper(
         cropShapeFn: cropPathFn,
         allowedAspectRatios: allowedAspectRatios,
         enabledTransformations: enabledTransformations,
-        overlayColor: overlayColor, // Übergebe die Theme-basierte Overlay-Farbe
+        overlayColor: pageLevelOverlayColor, // Übergebe die Theme-basierte Overlay-Farbe
         builder: (context, controller) => CupertinoImageCropperPage(
           heroTag: heroTag,
           showLoadingIndicatorOnSubmit: showLoadingIndicatorOnSubmit,
